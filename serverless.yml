@@ -1,0 +1,28 @@
+org: atoo35
+app: aws-node-project
+service: aws-node-project
+frameworkVersion: "3"
+
+custom:
+  bucket: sessions-interview
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:PutObjectAcl
+          Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: "*"
+    environment:
+      BUCKET_NAME: ${self:custom.bucket}
